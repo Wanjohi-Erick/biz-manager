@@ -1,5 +1,6 @@
 package com.example.bizmanager.ui.home;
 
+import android.app.ProgressDialog;
 import android.content.DialogInterface;
 import android.os.Bundle;
 import android.text.TextUtils;
@@ -34,9 +35,10 @@ import java.util.Objects;
 public class HomeFragment extends Fragment {
     private TextView commodityEdit, particularsEdit, amountEdit;
     String commodity, particulars, amount;
-    String record_sale_url = "http://192.168.1.106/biz-manager/recordSale.php";
+    String record_sale_url = "http://josiekarimis.agria.co.ke/biz-manager/recordSale.php";
     private static final String TAG = "HomeFragment";
     AlertDialog.Builder alertDialogBuilder;
+    ProgressDialog progressDialog;
 
     public View onCreateView(@NonNull LayoutInflater inflater, ViewGroup container, Bundle savedInstanceState) {
         View view = inflater.inflate(R.layout.fragment_home, container, false);
@@ -46,6 +48,7 @@ public class HomeFragment extends Fragment {
         amountEdit = view.findViewById(R.id.amount);
         saveRecordBtn = view.findViewById(R.id.save_record);
         alertDialogBuilder = new AlertDialog.Builder(this.requireContext());
+        progressDialog = new ProgressDialog(getContext());
 
         saveRecordBtn.setOnClickListener(v -> getFromEditTexts(commodityEdit, particularsEdit, amountEdit));
 
@@ -68,9 +71,13 @@ public class HomeFragment extends Fragment {
     }
 
     private void sendToDatabase(String commodity, String particulars, String amount) {
+        progressDialog.setTitle("Please Wait");
+        progressDialog.setMessage("Recording ...");
+        progressDialog.show();
         StringRequest stringRequest = new StringRequest(Request.Method.POST, record_sale_url, new Response.Listener<String>() {
             @Override
             public void onResponse(String response) {
+                progressDialog.dismiss();
                 if (response.equalsIgnoreCase("success")) {
                     alertDialogBuilder.setTitle("Server Response");
                     alertDialogBuilder.setMessage(response);
@@ -84,12 +91,11 @@ public class HomeFragment extends Fragment {
                 }
             }
         }, error -> {
+            progressDialog.dismiss();
             alertDialogBuilder.setTitle("Server Response");
             alertDialogBuilder.setMessage(error.getLocalizedMessage());
             alertDialogBuilder.setPositiveButton("Ok", (dialog, which) -> {
                 dialog.dismiss();
-                particularsEdit.setText("");
-                amountEdit.setText("");
             });
             AlertDialog alertDialog = alertDialogBuilder.create();
             alertDialog.show();
