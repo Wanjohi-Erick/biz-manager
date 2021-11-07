@@ -55,11 +55,12 @@ public class ViewSalesFragment extends Fragment {
                 JSONArray jsonArray = new JSONArray(response);
                 for (int i = 0; i < jsonArray.length(); i++) {
                     JSONObject object = jsonArray.getJSONObject(i);
+                    String id = object.getString("id");
                     String particulars = object.getString("particulars");
                     String commodity = "Tomatoes";
                     String date = object.getString("date");
                     String amount = object.getString("amount");
-                    sales = new Sales(date, particulars, commodity, amount);
+                    sales = new Sales(id, date, particulars, commodity, amount);
                     salesList.add(sales);
                     salesAdapter = new SalesAdapter(salesList);
                     salesRecycler.setAdapter(salesAdapter);

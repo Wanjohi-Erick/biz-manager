@@ -1,7 +1,9 @@
 package com.example.bizmanager.ui.home;
 
 import android.app.ProgressDialog;
+import android.content.Context;
 import android.content.DialogInterface;
+import android.net.ConnectivityManager;
 import android.os.Bundle;
 import android.text.TextUtils;
 import android.util.Log;
@@ -15,6 +17,7 @@ import android.widget.Toast;
 import androidx.annotation.NonNull;
 import androidx.annotation.Nullable;
 import androidx.appcompat.app.AlertDialog;
+import androidx.core.net.ConnectivityManagerCompat;
 import androidx.fragment.app.Fragment;
 import androidx.lifecycle.Observer;
 import androidx.lifecycle.ViewModelProvider;
@@ -26,8 +29,11 @@ import com.android.volley.Response;
 import com.android.volley.VolleyError;
 import com.android.volley.toolbox.StringRequest;
 import com.android.volley.toolbox.Volley;
+import com.example.bizmanager.InternetConnection;
 import com.example.bizmanager.R;
 
+import java.net.InetAddress;
+import java.net.UnknownHostException;
 import java.util.HashMap;
 import java.util.Map;
 import java.util.Objects;
@@ -50,7 +56,17 @@ public class HomeFragment extends Fragment {
         alertDialogBuilder = new AlertDialog.Builder(this.requireContext());
         progressDialog = new ProgressDialog(getContext());
 
-        saveRecordBtn.setOnClickListener(v -> getFromEditTexts(commodityEdit, particularsEdit, amountEdit));
+        saveRecordBtn.setOnClickListener(v -> {
+            if (InternetConnection.checkConnection(requireContext())) {
+                getFromEditTexts(commodityEdit, particularsEdit, amountEdit);
+            } else {
+                alertDialogBuilder.setTitle("Internet Error");
+                alertDialogBuilder.setMessage("Please make sure you have an active internet connection");
+                alertDialogBuilder.setPositiveButton("Ok", (dialog, which) -> dialog.dismiss());
+                AlertDialog alertDialog = alertDialogBuilder.create();
+                alertDialog.show();
+            }
+        });
 
         return view;
     }
@@ -62,9 +78,11 @@ public class HomeFragment extends Fragment {
 
         if (TextUtils.isEmpty(particulars)) {
             particularsEdit.setError("Enter particulars details");
+            return;
         }
         if (TextUtils.isEmpty(amount)) {
             amountEdit.setError("Enter Amount");
+            return;
         }
 
         sendToDatabase(commodity, particulars, amount);

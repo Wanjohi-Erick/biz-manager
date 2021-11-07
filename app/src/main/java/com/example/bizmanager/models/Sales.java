@@ -1,12 +1,21 @@
 package com.example.bizmanager.models;
 
 public class Sales {
-    String date, particulars, commodity, amount;
-    public Sales(String date, String particulars, String commodity, String amount) {
+    String id, date, particulars, commodity, amount;
+    public Sales(String id, String date, String particulars, String commodity, String amount) {
+        this.id = id;
         this.date = date;
         this.particulars = particulars;
         this.commodity = commodity;
         this.amount = amount;
+    }
+
+    public void setId(String id) {
+        this.id = id;
+    }
+
+    public String getId() {
+        return id;
     }
 
     public void setDate(String date) {
