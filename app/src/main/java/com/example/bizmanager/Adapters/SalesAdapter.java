@@ -17,6 +17,7 @@ import com.android.volley.toolbox.StringRequest;
 import com.android.volley.toolbox.Volley;
 import com.example.bizmanager.R;
 import com.example.bizmanager.models.Sales;
+import com.example.bizmanager.ui.view_sales.ViewSalesFragment;
 
 import org.jetbrains.annotations.NotNull;
 
@@ -57,6 +58,7 @@ public class SalesAdapter extends RecyclerView.Adapter<SalesAdapter.MyViewHolder
                         alertDialogBuilder.setTitle("Server Response");
                         alertDialogBuilder.setMessage(response);
                         alertDialogBuilder.setPositiveButton("Ok", (dialog1, which1) -> {
+                            (Activity)
                             dialog1.dismiss();
                         });
                         AlertDialog alertDialog = alertDialogBuilder.create();
