@@ -58,7 +58,6 @@ public class SalesAdapter extends RecyclerView.Adapter<SalesAdapter.MyViewHolder
                         alertDialogBuilder.setTitle("Server Response");
                         alertDialogBuilder.setMessage(response);
                         alertDialogBuilder.setPositiveButton("Ok", (dialog1, which1) -> {
-                            (Activity)
                             dialog1.dismiss();
                         });
                         AlertDialog alertDialog = alertDialogBuilder.create();
