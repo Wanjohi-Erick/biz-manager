@@ -129,6 +129,7 @@ public class RecordSalesFragment extends Fragment {
                         dialog.dismiss();
                         particularsEdit.setText("");
                         quantityEdit.setText("");
+                        unitPriceEdit.setText("");
                     });
                     AlertDialog alertDialog = alertDialogBuilder.create();
                     alertDialog.show();

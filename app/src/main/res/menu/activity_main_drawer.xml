@@ -3,22 +3,34 @@
     xmlns:tools="http://schemas.android.com/tools"
     tools:showIn="navigation_view">
 
-    <group android:checkableBehavior="single">
+    <group
+        android:id="@+id/sales"
+        android:checkableBehavior="single">
         <item
             android:id="@+id/nav_record_sales"
-            android:icon="@drawable/ic_baseline_home_24"
+            android:icon="@drawable/ic_baseline_attach_money_24"
             android:title="@string/menu_home" />
         <item
             android:id="@+id/nav_view_sales"
             android:icon="@drawable/ic_baseline_attach_money_24"
             android:title="@string/menu_view_sales" />
+    </group>
+    <group android:id="@+id/input" android:checkableBehavior="single">
         <item
             android:id="@+id/nav_record_input"
             android:icon="@drawable/ic_baseline_attach_money_24"
             android:title="@string/menu_record_input" />
         <item
             android:id="@+id/nav_view_input"
-            android:icon="@drawable/ic_baseline_home_24"
+            android:icon="@drawable/ic_baseline_attach_money_24"
             android:title="@string/menu_view_input" />
+    </group>
+    <group
+        android:id="@+id/menu_bottom"
+        android:checkableBehavior="none">
+        <item
+            android:id="@+id/nav_view_account"
+            android:icon="@drawable/ic_baseline_home_24"
+            android:title="@string/menu_view_account" />
     </group>
 </menu>
