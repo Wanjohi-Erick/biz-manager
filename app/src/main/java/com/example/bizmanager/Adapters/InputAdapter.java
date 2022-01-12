@@ -16,7 +16,7 @@ import com.android.volley.RequestQueue;
 import com.android.volley.toolbox.StringRequest;
 import com.android.volley.toolbox.Volley;
 import com.example.bizmanager.R;
-import com.example.bizmanager.models.Sales;
+import com.example.bizmanager.models.Input;
 
 import org.jetbrains.annotations.NotNull;
 
@@ -24,29 +24,28 @@ import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
 
-public class SalesAdapter extends RecyclerView.Adapter<SalesAdapter.MyViewHolder> {
-    List<Sales> salesList;
-    public SalesAdapter(List<Sales> salesList) {
-        this.salesList = salesList;
+public class InputAdapter extends RecyclerView.Adapter<InputAdapter.MyViewHolder> {
+    List<Input> inputList;
+    public InputAdapter(List<Input> inputList) {
+        this.inputList = inputList;
     }
 
     @NonNull
     @NotNull
     @Override
     public MyViewHolder onCreateViewHolder(@NonNull @NotNull ViewGroup parent, int viewType) {
-        View view = LayoutInflater.from(parent.getContext()).inflate(R.layout.custom_sales_row, parent, false);
+        View view = LayoutInflater.from(parent.getContext()).inflate(R.layout.custom_input_row, parent, false);
         return new MyViewHolder(view);
     }
 
     @Override
     public void onBindViewHolder(@NonNull @NotNull MyViewHolder holder, int position) {
-        String id = salesList.get(position).getId();
-        holder.date.setText(salesList.get(position).getDate());
-        holder.particulars.setText(salesList.get(position).getParticulars());
-        String amountStr = "Kes " + salesList.get(position).getTotalPrice();
+        String id = inputList.get(position).getId();
+        holder.date.setText(inputList.get(position).getDate());
+        holder.quantity.setText(inputList.get(position).getQuantity());
+        String amountStr = "Kes " + inputList.get(position).getTotalPrice();
         holder.totalPrice.setText(amountStr);
-        holder.quantity.setText(salesList.get(position).getQuantity());
-        holder.commodity.setText(salesList.get(position).getCommodity());
+        holder.commodity.setText(inputList.get(position).getCommodity());
         holder.itemView.setOnLongClickListener(v -> {
             AlertDialog.Builder alertDialogBuilder = new AlertDialog.Builder(v.getContext());
             alertDialogBuilder.setTitle("Warning");
@@ -103,18 +102,17 @@ public class SalesAdapter extends RecyclerView.Adapter<SalesAdapter.MyViewHolder
 
     @Override
     public int getItemCount() {
-        return salesList.size();
+        return inputList.size();
     }
 
     public static class MyViewHolder extends RecyclerView.ViewHolder {
-        TextView date, commodity, totalPrice, particulars, quantity;
+        TextView date, commodity, quantity, totalPrice;
         public MyViewHolder(@NonNull @NotNull View itemView) {
             super(itemView);
             date = itemView.findViewById(R.id.date_view);
             commodity = itemView.findViewById(R.id.commodity);
-            particulars = itemView.findViewById(R.id.particulars);
-            totalPrice = itemView.findViewById(R.id.total_price);
             quantity = itemView.findViewById(R.id.quantity);
+            totalPrice = itemView.findViewById(R.id.total_price);
         }
     }
 }

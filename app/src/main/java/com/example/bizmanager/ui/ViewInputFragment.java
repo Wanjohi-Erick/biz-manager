@@ -1,4 +1,4 @@
-package com.example.bizmanager.ui.view_sales;
+package com.example.bizmanager.ui;
 
 import android.os.Bundle;
 import android.util.Log;
@@ -18,9 +18,9 @@ import com.android.volley.Request;
 import com.android.volley.RequestQueue;
 import com.android.volley.toolbox.StringRequest;
 import com.android.volley.toolbox.Volley;
-import com.example.bizmanager.Adapters.SalesAdapter;
+import com.example.bizmanager.Adapters.InputAdapter;
 import com.example.bizmanager.R;
-import com.example.bizmanager.models.Sales;
+import com.example.bizmanager.models.Input;
 
 import org.json.JSONArray;
 import org.json.JSONException;
@@ -29,21 +29,21 @@ import org.json.JSONObject;
 import java.util.ArrayList;
 import java.util.List;
 
-public class ViewSalesFragment extends Fragment {
-    private RecyclerView salesRecycler;
-    SalesAdapter salesAdapter;
+public class ViewInputFragment extends Fragment {
+    private RecyclerView inputRecycler;
+    InputAdapter inputAdapter;
     SwipeRefreshLayout swipeRefreshLayout;
-    List<Sales> salesList = new ArrayList<>();
-    Sales sales;
+    List<Input> inputList = new ArrayList<>();
+    Input input;
     AlertDialog.Builder alertDialogBuilder;
-    String retrieve_sales_url = "http://josiekarimis.agria.co.ke/biz-manager/retrieveSales.php";
-    private static final String TAG = "ViewSalesFragment";
+    String retrieve_input_url = "http://josiekarimis.agria.co.ke/biz-manager/retrieveInput.php";
+    private static final String TAG = "ViewInputFragment";
     public TextView countView, sumView;
     int count = 0, sum = 0;
 
     public View onCreateView(@NonNull LayoutInflater inflater, ViewGroup container, Bundle savedInstanceState) {
-        View view = inflater.inflate(R.layout.fragment_view_sales, container, false);
-        salesRecycler = view.findViewById(R.id.view_sales_recycler);
+        View view = inflater.inflate(R.layout.fragment_view_input, container, false);
+        inputRecycler = view.findViewById(R.id.view_input_recycler);
         countView = view.findViewById(R.id.count);
         sumView = view.findViewById(R.id.sum);
         swipeRefreshLayout = view.findViewById(R.id.refreshLayout);
@@ -57,28 +57,30 @@ public class ViewSalesFragment extends Fragment {
             swipeRefreshLayout.setRefreshing(true);
             getFromDatabase();
         });
-        salesRecycler.setHasFixedSize(true);
-        salesRecycler.setLayoutManager(new LinearLayoutManager(this.getContext()));
+        inputRecycler.setHasFixedSize(true);
+        inputRecycler.setLayoutManager(new LinearLayoutManager(this.getContext()));
         return view;
     }
 
     private void getFromDatabase() {
-        StringRequest stringRequest = new StringRequest(Request.Method.GET, retrieve_sales_url, response -> {
+        StringRequest stringRequest = new StringRequest(Request.Method.GET, retrieve_input_url, response -> {
             try {
                 JSONArray jsonArray = new JSONArray(response);
                 for (int i = 0; i < jsonArray.length(); i++) {
                     JSONObject object = jsonArray.getJSONObject(i);
-                    String id = object.getString("id");
-                    String particulars = object.getString("particulars");
-                    String commodity = "Tomatoes";
-                    String date = object.getString("date");
-                    String amount = object.getString("amount");
-                    sales = new Sales(id, date, particulars, commodity, amount);
-                    salesList.add(sales);
-                    salesAdapter = new SalesAdapter(salesList);
-                    salesRecycler.setAdapter(salesAdapter);
+                    String id = object.getString("ID");
+                    String commodity = object.getString("Commodity");
+                    String date = object.getString("Date");
+                    String quantity = object.getString("Quantity");
+                    String unitPrice = object.getString("Unit Price");
+                    String totalPrice = object.getString("Total Price");
+                    String paymentMethod = object.getString("Payment Method");
+                    input = new Input(id, date, commodity, quantity, unitPrice, totalPrice, paymentMethod);
+                    inputList.add(input);
+                    inputAdapter = new InputAdapter(inputList);
+                    inputRecycler.setAdapter(inputAdapter);
                     count++;
-                    sum += Integer.parseInt(amount);
+                    sum += Integer.parseInt(totalPrice);
                     countView.setText(String.valueOf(count));
                     String amountStr = "Kes " + sum;
                     sumView.setText(amountStr);

@@ -3,18 +3,30 @@
     xmlns:app="http://schemas.android.com/apk/res-auto"
     xmlns:tools="http://schemas.android.com/tools"
     android:id="@+id/mobile_navigation"
-    app:startDestination="@+id/nav_home">
+    app:startDestination="@+id/nav_record_sales">
 
     <fragment
-        android:id="@+id/nav_home"
-        android:name="com.example.bizmanager.ui.home.HomeFragment"
+        android:id="@+id/nav_record_sales"
+        android:name="com.example.bizmanager.ui.RecordSalesFragment"
         android:label="@string/menu_home"
-        tools:layout="@layout/fragment_home" />
+        tools:layout="@layout/fragment_record_sales" />
 
     <fragment
         android:id="@+id/nav_view_sales"
-        android:name="com.example.bizmanager.ui.view_sales.ViewSalesFragment"
+        android:name="com.example.bizmanager.ui.ViewSalesFragment"
         android:label="@string/menu_view_sales"
         tools:layout="@layout/fragment_view_sales" />
+
+    <fragment
+        android:id="@+id/nav_record_input"
+        android:name="com.example.bizmanager.ui.RecordInputFragment"
+        android:label="@string/menu_record_input"
+        tools:layout="@layout/fragment_record_input" />
+
+    <fragment
+        android:id="@+id/nav_view_input"
+        android:name="com.example.bizmanager.ui.ViewInputFragment"
+        android:label="@string/menu_view_input"
+        tools:layout="@layout/fragment_view_input" />
 
 </navigation>

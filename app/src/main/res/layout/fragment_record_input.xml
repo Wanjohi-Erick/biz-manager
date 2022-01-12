@@ -1,0 +1,104 @@
+<?xml version="1.0" encoding="utf-8"?>
+<LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:tools="http://schemas.android.com/tools"
+    android:layout_width="match_parent"
+    android:orientation="vertical"
+    android:layout_height="match_parent"
+    android:background="@drawable/layout_background"
+    tools:context=".ui.RecordSalesFragment">
+
+
+    <ScrollView
+        android:layout_width="match_parent"
+        android:layout_height="match_parent">
+
+        <LinearLayout
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:gravity="center"
+            android:orientation="vertical">
+            <TextView
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:text="@string/menu_record_input"
+                android:textSize="@dimen/title_size"
+                android:fontFamily="cursive"
+                android:layout_margin="@dimen/margin"
+                android:textColor="@color/white"
+                android:textStyle="bold"/>
+
+            <EditText
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:id="@+id/commodity"
+                android:drawableStart="@drawable/ic_baseline_shopping_basket_24"
+                android:drawablePadding="@dimen/margin"
+                android:text="@string/tomatoes"
+                android:padding="10dp"
+                android:background="@drawable/edit_text_background"
+                android:textSize="18sp"
+                android:layout_margin="8dp"
+                android:inputType="none"
+                android:autofillHints="@string/tomatoes"
+                tools:ignore="LabelFor" />
+
+            <EditText
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:id="@+id/quantity"
+                android:padding="10dp"
+                android:inputType="textCapWords"
+                android:hint="@string/quantity"
+                android:drawableStart="@drawable/ic_baseline_person_24"
+                android:drawablePadding="@dimen/margin"
+                android:background="@drawable/edit_text_background"
+                android:textSize="18sp"
+                android:layout_margin="8dp"
+                android:autofillHints="@string/quantity" />
+
+            <EditText
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:id="@+id/unit_price"
+                android:drawableStart="@drawable/ic_baseline_attach_money_24"
+                android:drawablePadding="@dimen/margin"
+                android:hint="@string/unit_price"
+                android:inputType="number"
+                android:padding="10dp"
+                android:background="@drawable/edit_text_background"
+                android:textSize="18sp"
+                android:layout_margin="8dp"
+                android:autofillHints="@string/unit_price" />
+
+            <RadioGroup
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:layout_margin="@dimen/margin">
+                <RadioButton
+                    android:id="@+id/cash_payment"
+                    android:layout_width="match_parent"
+                    android:layout_height="wrap_content"
+                    android:text="Cash" />
+                <RadioButton
+                    android:id="@+id/mpesa_payment"
+                    android:layout_width="match_parent"
+                    android:layout_height="wrap_content"
+                    android:text="M-Pesa" />
+                <RadioButton
+                    android:id="@+id/card_payment"
+                    android:layout_width="match_parent"
+                    android:layout_height="wrap_content"
+                    android:text="Card" />
+            </RadioGroup>
+
+            <Button
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:id="@+id/save_record"
+                android:text="@string/record"
+                android:background="@drawable/button_background"
+                android:layout_margin="@dimen/margin"
+                android:textSize="@dimen/text_size"/>
+        </LinearLayout>
+    </ScrollView>
+</LinearLayout>

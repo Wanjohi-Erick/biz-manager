@@ -19,7 +19,7 @@
             android:id="@+id/textview"
             android:fontFamily="cursive"
             android:layout_margin="@dimen/margin"
-            android:text="@string/menu_view_sales"
+            android:text="@string/menu_view_input"
             android:textColor="@color/white"
             android:textSize="@dimen/title_size"
             android:textStyle="bold"
@@ -28,7 +28,7 @@
             app:layout_constraintTop_toTopOf="parent" />
 
         <androidx.recyclerview.widget.RecyclerView
-            android:id="@+id/view_sales_recycler"
+            android:id="@+id/view_input_recycler"
             android:layout_width="match_parent"
             android:layout_height="0dp"
             android:scrollbars="vertical"
@@ -58,7 +58,7 @@
                 <TextView
                     android:layout_width="wrap_content"
                     android:layout_height="wrap_content"
-                    android:text="Total Sales"
+                    android:text="Total Commodities"
                     android:textSize="20sp" />
 
                 <TextView

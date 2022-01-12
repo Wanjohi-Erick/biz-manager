@@ -1,17 +1,16 @@
 package com.example.bizmanager.models;
 
-public class Sales {
-    String id, date, particulars, commodity, quantity, unitPrice, totalPrice, paymentMethod, creditStatus;
-    public Sales(String id, String date, String particulars, String commodity, String quantity, String unitPrice, String totalPrice, String paymentMethod, String creditStatus) {
+public class Input {
+    String id, date, commodity, quantity, unitPrice, totalPrice, paymentMethod;
+
+    public Input(String id, String date, String commodity, String quantity, String unitPrice, String totalPrice, String paymentMethod) {
         this.id = id;
         this.date = date;
-        this.particulars = particulars;
         this.commodity = commodity;
         this.quantity = quantity;
         this.unitPrice = unitPrice;
         this.totalPrice = totalPrice;
         this.paymentMethod = paymentMethod;
-        this.creditStatus = creditStatus;
     }
 
     public void setId(String id) {
@@ -28,14 +27,6 @@ public class Sales {
 
     public String getDate() {
         return date;
-    }
-
-    public void setParticulars(String particulars) {
-        this.particulars = particulars;
-    }
-
-    public String getParticulars() {
-        return particulars;
     }
 
     public void setCommodity(String commodity) {
@@ -76,13 +67,5 @@ public class Sales {
 
     public String getPaymentMethod() {
         return paymentMethod;
-    }
-
-    public void setCreditStatus(String creditStatus) {
-        this.creditStatus = creditStatus;
-    }
-
-    public String getCreditStatus() {
-        return creditStatus;
     }
 }
