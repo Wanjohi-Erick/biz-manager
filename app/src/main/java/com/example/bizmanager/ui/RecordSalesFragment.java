@@ -245,7 +245,16 @@ public class RecordSalesFragment extends Fragment {
         Log.d(TAG, "extractMessage: " + balance);
         String cost = response.get("cost");
         String particulars = response.get("participant");
-        String formattedResponse = "Type: " + type + "\nCode: " + code + "\nAmount: " + amount + "\nBalance: " + balance + "\nTransaction Cost: " + cost + "\nParticulars: " + particulars;
+        String date = response.get("date");
+        String time = response.get("time");
+
+        assert particulars != null;
+        String[] arrayList = particulars.split(" ");
+        String phone = arrayList[0];
+        String firstName = arrayList[1];
+        String lastName = arrayList[arrayList.length -1];
+
+        String formattedResponse = "Type: " + type + "\nCode: " + code + "\nAmount: " + amount + "\nBalance: " + balance + "\nTransaction Cost: " + cost + "\nPhone: " + phone + "\nFirst Name: " + firstName + "\nLast Name: " + lastName + "\nDate: " + date + "\nTime: " + time;
 
         //resultView.setText(formattedResponse);
     }
