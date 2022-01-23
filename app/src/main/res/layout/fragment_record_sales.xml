@@ -27,19 +27,16 @@
                 android:textColor="@color/white"
                 android:textStyle="bold"/>
 
-            <EditText
+            <Spinner
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
                 android:id="@+id/commodity"
-                android:drawableStart="@drawable/ic_baseline_shopping_basket_24"
-                android:drawablePadding="@dimen/margin"
+
                 android:padding="10dp"
-                android:hint="@string/commodity"
                 android:background="@drawable/edit_text_background"
                 android:textSize="18sp"
                 android:layout_margin="8dp"
-                android:inputType="textCapWords"
-                android:autofillHints="@string/tomatoes"
+
                 tools:ignore="LabelFor" />
 
             <EditText
