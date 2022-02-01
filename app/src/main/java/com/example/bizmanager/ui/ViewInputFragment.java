@@ -36,7 +36,7 @@ public class ViewInputFragment extends Fragment {
     List<Input> inputList = new ArrayList<>();
     Input input;
     AlertDialog.Builder alertDialogBuilder;
-    String retrieve_input_url = "http://josiekarimis.agria.co.ke/biz-manager/retrieveInput.php";
+    String retrieve_input_url = "http://biz-manager.agria.co.ke/retrieveInput.php";
     private static final String TAG = "ViewInputFragment";
     public TextView countView, sumView;
     int count = 0, sum = 0;

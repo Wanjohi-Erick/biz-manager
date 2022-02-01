@@ -51,7 +51,7 @@ public class InputAdapter extends RecyclerView.Adapter<InputAdapter.MyViewHolder
             alertDialogBuilder.setTitle("Warning");
             alertDialogBuilder.setMessage("Are you  sure you want to delete this item?");
             alertDialogBuilder.setPositiveButton("Yes", (dialog, which) -> {
-                String update_url = "http://josiekarimis.agria.co.ke/biz-manager/deleteSale.php";
+                String update_url = "http://biz-manager.agria.co.ke/deleteInput.php";
                 StringRequest stringRequest = new StringRequest(Request.Method.POST, update_url, response -> {
                     if (response.equalsIgnoreCase("successfully deleted")) {
                         alertDialogBuilder.setTitle("Server Response");

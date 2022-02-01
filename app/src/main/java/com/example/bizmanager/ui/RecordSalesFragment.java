@@ -1,12 +1,19 @@
 package com.example.bizmanager.ui;
 
 import android.app.ProgressDialog;
+import android.content.Context;
+import android.content.Intent;
+import android.content.IntentFilter;
 import android.os.Bundle;
 import android.text.TextUtils;
 import android.util.Log;
 import android.view.LayoutInflater;
+import android.view.Menu;
+import android.view.MenuInflater;
+import android.view.MenuItem;
 import android.view.View;
 import android.view.ViewGroup;
+import android.widget.AdapterView;
 import android.widget.ArrayAdapter;
 import android.widget.Button;
 import android.widget.ListAdapter;
@@ -23,14 +30,14 @@ import androidx.fragment.app.Fragment;
 
 import com.android.volley.Request;
 import com.android.volley.RequestQueue;
-import com.android.volley.Response;
-import com.android.volley.VolleyError;
 import com.android.volley.toolbox.StringRequest;
 import com.android.volley.toolbox.Volley;
 import com.example.bizmanager.InternetConnection;
 import com.example.bizmanager.MessageParser;
 import com.example.bizmanager.R;
+import com.example.bizmanager.ReceiveSms;
 import com.example.bizmanager.models.Commodities;
+import com.google.android.material.floatingactionbutton.FloatingActionButton;
 
 import org.json.JSONArray;
 import org.json.JSONException;
@@ -44,16 +51,44 @@ import java.util.Objects;
 
 public class RecordSalesFragment extends Fragment {
     private TextView particularsEdit, quantityEdit, unitPriceEdit;
+    TextView smsView;
     Spinner commoditySpinner;
-    private RadioButton cashRadio, mpesaRadio, cardRadio, paidRadio, creditRadio;
-    String commodity, particulars, quantity, unitPrice, paymentMethod, creditStatus;
-    String record_sale_url = "http://josiekarimis.agria.co.ke/biz-manager/recordSale.php";
-    String retrieve_commodity_details_url = "http://192.168.0.108/biz-manager/retrieveCommodities.php";
+    private RadioButton cashRadio, mpesaRadio;
+    FloatingActionButton addSaleBtn;
+    String commodity, particulars, quantity, unitPrice, paymentMethod;
+    String transactionCost, phone, firstName, lastName, code, amount;
+    String record_sale_url = "http://biz-manager.agria.co.ke/recordSale.php";
+    String retrieve_commodity_details_url = "http://biz-manager.agria.co.ke/retrieveCommodities.php";
     private static final String TAG = "RecordSalesFragment";
     AlertDialog.Builder alertDialogBuilder;
     ProgressDialog progressDialog;
     Commodities commodities;
     List<Commodities> commoditiesList = new ArrayList<>();
+    List<String> names = new ArrayList<>();
+
+    ReceiveSms receiveSms = new ReceiveSms() {
+        @Override
+        public void onReceive(Context context, Intent intent) {
+            super.onReceive(context, intent);
+
+            if (sender.equalsIgnoreCase("Mpesa")) {
+                extractMessage(message_body);
+                Log.i(TAG, "onReceive: response: " + message_body);
+            }
+        }
+    };
+
+    @Override
+    public void onResume() {
+        super.onResume();
+        getActivity().registerReceiver(receiveSms, new IntentFilter("android.provider.Telephony.SMS_RECEIVED"));
+    }
+
+    @Override
+    public void onDestroy() {
+        super.onDestroy();
+        getActivity().unregisterReceiver(receiveSms);
+    }
 
     public View onCreateView(@NonNull LayoutInflater inflater, ViewGroup container, Bundle savedInstanceState) {
         View view = inflater.inflate(R.layout.fragment_record_sales, container, false);
@@ -62,11 +97,11 @@ public class RecordSalesFragment extends Fragment {
         particularsEdit = view.findViewById(R.id.particulars);
         quantityEdit = view.findViewById(R.id.quantity);
         unitPriceEdit = view.findViewById(R.id.unit_price);
+        smsView = view.findViewById(R.id.sms_content);
         cashRadio = view.findViewById(R.id.cash_payment);
         mpesaRadio = view.findViewById(R.id.mpesa_payment);
-        cardRadio = view.findViewById(R.id.card_payment);
-        paidRadio = view.findViewById(R.id.paidRadio);
-        creditRadio = view.findViewById(R.id.creditRadio);
+        addSaleBtn = view.findViewById(R.id.add_sale);
+        addSaleBtn.setOnClickListener(v -> AddSale());
         saveRecordBtn = view.findViewById(R.id.save_record);
         alertDialogBuilder = new AlertDialog.Builder(this.requireContext());
         progressDialog = new ProgressDialog(getContext());
@@ -88,21 +123,24 @@ public class RecordSalesFragment extends Fragment {
         return view;
     }
 
+    private void AddSale() {
+
+    }
+
     private void retrieveCommodities() {
-        StringRequest stringRequest = new StringRequest(Request.Method.GET, retrieve_commodity_details_url, response -> {
+        StringRequest stringRequest = new StringRequest(Request.Method.POST, retrieve_commodity_details_url, response -> {
             try {
                 JSONArray jsonArray = new JSONArray(response);
-                Log.i(TAG, "retrieveCommodities: response: " + response);
                 for (int i = 0; i < jsonArray.length(); i++) {
                     JSONObject object = jsonArray.getJSONObject(i);
-                    String id = object.getString("id");
+                    String id = object.getString("ID");
                     String name = object.getString("Name");
-                    Log.i(TAG, "retrieveCommodities: response: " + name);
                     String production_cost = object.getString("Production Cost");
                     String unitPrice = object.getString("Unit Price");
                     commodities = new Commodities(id, name, production_cost, unitPrice);
                     commoditiesList.add(commodities);
-                    ListAdapter listAdapter = new ArrayAdapter<Commodities>(getContext(), android.R.layout.simple_spinner_dropdown_item, commoditiesList);
+                    names.add(commodities.getName());
+                    ListAdapter listAdapter = new ArrayAdapter<>(getContext(), android.R.layout.simple_spinner_dropdown_item, names);
                     commoditySpinner.setAdapter((SpinnerAdapter) listAdapter);
                 }
             } catch (JSONException e) {
@@ -118,25 +156,30 @@ public class RecordSalesFragment extends Fragment {
         stringRequest.setShouldCache(false);
         RequestQueue requestQueue = Volley.newRequestQueue(requireContext());
         requestQueue.add(stringRequest);
+
+        commoditySpinner.setOnItemSelectedListener(new AdapterView.OnItemSelectedListener() {
+            @Override
+            public void onItemSelected(AdapterView<?> parent, View view, int position, long id) {
+                unitPriceEdit.setText(commoditiesList.get(position).getUnit_price());
+            }
+
+            @Override
+            public void onNothingSelected(AdapterView<?> parent) {
+                unitPriceEdit.setText(commoditiesList.get(0).getUnit_price());
+            }
+        });
     }
 
     private void getFromEditTexts(TextView particularsEdit, TextView amountEdit, TextView unitPriceEdit) {
         particulars = particularsEdit.getText().toString();
         quantity = amountEdit.getText().toString();
         unitPrice = unitPriceEdit.getText().toString();
+        commodity = commoditySpinner.getSelectedItem().toString();
 
         if (cashRadio.isChecked()) {
             paymentMethod = cashRadio.getText().toString();
         } else if (mpesaRadio.isChecked()) {
             paymentMethod = mpesaRadio.getText().toString();
-        } else if (cardRadio.isChecked()) {
-            paymentMethod = cardRadio.getText().toString();
-        }
-
-        if (paidRadio.isChecked()) {
-            creditStatus = paidRadio.getText().toString();
-        } else if (creditRadio.isChecked()) {
-            creditStatus = creditRadio.getText().toString();
         }
 
         if (TextUtils.isEmpty(particulars)) {
@@ -158,42 +201,34 @@ public class RecordSalesFragment extends Fragment {
             return;
         }
 
-        if (TextUtils.isEmpty(creditStatus)) {
-            Toast.makeText(getContext(), "Select Credit Status!", Toast.LENGTH_SHORT).show();
-            return;
-        }
-
-        sendToDatabase(commodity, particulars, quantity, unitPrice, paymentMethod, creditStatus);
+        sendToDatabase(commodity, particulars, quantity, unitPrice, paymentMethod);
     }
 
-    private void sendToDatabase(String commodity, String particulars, String quantity, String unitPrice, String paymentMethod, String creditStatus) {
+    private void sendToDatabase(String commodity, String particulars, String quantity, String unitPrice, String paymentMethod) {
         progressDialog.setTitle("Please Wait");
         progressDialog.setMessage("Recording ...");
         progressDialog.show();
-        StringRequest stringRequest = new StringRequest(Request.Method.POST, record_sale_url, new Response.Listener<String>() {
-            @Override
-            public void onResponse(String response) {
-                progressDialog.dismiss();
-                if (response.equalsIgnoreCase("success")) {
-                    alertDialogBuilder.setTitle("Server Response");
-                    alertDialogBuilder.setMessage(response);
-                    alertDialogBuilder.setPositiveButton("Ok", (dialog, which) -> {
-                        dialog.dismiss();
-                        particularsEdit.setText("");
-                        quantityEdit.setText("");
-                        unitPriceEdit.setText("");
-                    });
-                    AlertDialog alertDialog = alertDialogBuilder.create();
-                    alertDialog.show();
-                } else {
-                    alertDialogBuilder.setTitle("Error");
-                    alertDialogBuilder.setMessage(response);
-                    alertDialogBuilder.setPositiveButton("Ok", (dialog, which) -> {
-                        dialog.dismiss();
-                    });
-                    AlertDialog alertDialog = alertDialogBuilder.create();
-                    alertDialog.show();
-                }
+        StringRequest stringRequest = new StringRequest(Request.Method.POST, record_sale_url, response -> {
+            progressDialog.dismiss();
+            if (response.equalsIgnoreCase("success")) {
+                alertDialogBuilder.setTitle("Server Response");
+                alertDialogBuilder.setMessage(response);
+                alertDialogBuilder.setPositiveButton("Ok", (dialog, which) -> {
+                    dialog.dismiss();
+                    particularsEdit.setText("");
+                    quantityEdit.setText("");
+                    unitPriceEdit.setText("");
+                });
+                AlertDialog alertDialog = alertDialogBuilder.create();
+                alertDialog.show();
+            } else {
+                alertDialogBuilder.setTitle("Error");
+                alertDialogBuilder.setMessage(response);
+                alertDialogBuilder.setPositiveButton("Ok", (dialog, which) -> {
+                    dialog.dismiss();
+                });
+                AlertDialog alertDialog = alertDialogBuilder.create();
+                alertDialog.show();
             }
         }, error -> {
             progressDialog.dismiss();
@@ -215,7 +250,19 @@ public class RecordSalesFragment extends Fragment {
                 data.put("Quantity", quantity);
                 data.put("UnitPrice", unitPrice);
                 data.put("PaymentMethod", paymentMethod);
-                data.put("CreditStatus", creditStatus);
+                if (paymentMethod.equalsIgnoreCase("M-Pesa")) {
+                    data.put("TransactionCost", transactionCost);
+                    data.put("TransactionCode", code);
+                    data.put("FirstName", firstName);
+                    data.put("LastName", lastName);
+                    data.put("Phone", phone);
+                } else if (paymentMethod.equalsIgnoreCase("cash")) {
+                    data.put("TransactionCost", "transactionCost");
+                    data.put("TransactionCode", "code");
+                    data.put("FirstName", "firstName");
+                    data.put("LastName", "lastName");
+                    data.put("Phone", "phone");
+                }
                 return data;
             }
         };
@@ -225,13 +272,12 @@ public class RecordSalesFragment extends Fragment {
     }
 
     //todo: get mpesa sms and retrieve crucial details
-    private void extractMessage() {
-        String message = "inputEdit.getText().toString()";
+    private void extractMessage(String message) {
         MessageParser messageParser = new MessageParser();
         Map<String, String> response = messageParser.parse(message);
         String type = response.get("type");
-        String code = Objects.requireNonNull(response.get("code")).toUpperCase();
-        String amount = response.get("amount");
+        code = Objects.requireNonNull(response.get("code")).toUpperCase();
+        amount = response.get("amount");
         String unbalanced = response.get("balance");
         assert unbalanced != null;
         String[] balanceArray = unbalanced.split("\\.");
@@ -243,19 +289,33 @@ public class RecordSalesFragment extends Fragment {
         }
         String balance = String.join(".", bal);
         Log.d(TAG, "extractMessage: " + balance);
-        String cost = response.get("cost");
+        transactionCost = response.get("cost");
         String particulars = response.get("participant");
         String date = response.get("date");
         String time = response.get("time");
 
         assert particulars != null;
         String[] arrayList = particulars.split(" ");
-        String phone = arrayList[0];
-        String firstName = arrayList[1];
-        String lastName = arrayList[arrayList.length -1];
+        phone = arrayList[0];
+        firstName = arrayList[1];
+        lastName = arrayList[arrayList.length -1];
 
-        String formattedResponse = "Type: " + type + "\nCode: " + code + "\nAmount: " + amount + "\nBalance: " + balance + "\nTransaction Cost: " + cost + "\nPhone: " + phone + "\nFirst Name: " + firstName + "\nLast Name: " + lastName + "\nDate: " + date + "\nTime: " + time;
+        particularsEdit.setText(firstName);
 
-        //resultView.setText(formattedResponse);
+        String formattedResponse = "Type: " + type + "\nCode: " + code + "\nAmount: " + amount + "\nBalance: " + balance + "\nTransaction Cost: " + transactionCost + "\nPhone: " + phone + "\nFirst Name: " + firstName + "\nLast Name: " + lastName + "\nDate: " + date + "\nTime: " + time;
+        smsView.setText(formattedResponse);
+    }
+
+    @Override
+    public void onCreateOptionsMenu(@NonNull Menu menu, @NonNull MenuInflater inflater) {
+        super.onCreateOptionsMenu(menu, inflater);
+    }
+
+    @Override
+    public boolean onOptionsItemSelected(@NonNull MenuItem item) {
+        if (item.getItemId() == R.id.action_stk_push) {
+
+        }
+        return super.onOptionsItemSelected(item);
     }
 }

@@ -27,4 +27,5 @@
     <string name="payment_method">Payment Method</string>
     <string name="commodity">Commodity</string>
     <string name="menu_view_account">View Account</string>
+    <string name="action_stk_push">STK Push</string>
 </resources>

@@ -31,7 +31,7 @@ public class RecordInputFragment extends Fragment {
     private TextView commodityEdit, QuantityEdit, UnitPriceEdit;
     String commodity, quantity, unitPrice, paymentMethod;
     RadioButton cashPaymentRadio, mpesaPaymentRadio, cardPaymentRadio;
-    String record_input_url = "http://josiekarimis.agria.co.ke/biz-manager/recordInput.php";
+    String record_input_url = "http://biz-manager.agria.co.ke/recordInput.php";
     private static final String TAG = "RecordInputFragment";
     AlertDialog.Builder alertDialogBuilder;
     ProgressDialog progressDialog;
@@ -105,6 +105,7 @@ public class RecordInputFragment extends Fragment {
                     alertDialogBuilder.setMessage(response);
                     alertDialogBuilder.setPositiveButton("Ok", (dialog, which) -> {
                         dialog.dismiss();
+                        commodityEdit.setText("");
                         QuantityEdit.setText("");
                         UnitPriceEdit.setText("");
                     });

@@ -36,7 +36,7 @@ public class ViewSalesFragment extends Fragment {
     List<Sales> salesList = new ArrayList<>();
     Sales sales;
     AlertDialog.Builder alertDialogBuilder;
-    String retrieve_sales_url = "http://josiekarimis.agria.co.ke/biz-manager/retrieveSales.php";
+    String retrieve_sales_url = "http://biz-manager.agria.co.ke/retrieveSales.php";
     private static final String TAG = "ViewSalesFragment";
     public TextView countView, sumView;
     int count = 0, sum = 0;
