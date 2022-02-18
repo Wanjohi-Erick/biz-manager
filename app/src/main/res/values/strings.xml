@@ -28,4 +28,8 @@
     <string name="commodity">Commodity</string>
     <string name="menu_view_account">View Account</string>
     <string name="action_stk_push">STK Push</string>
+    <string name="menu_view_commodities">View Commodities</string>
+    <string name="enter_commodity_name">Enter commodity name</string>
+    <string name="production_cost">Production Cost</string>
+    <string name="cancel">Cancel</string>
 </resources>

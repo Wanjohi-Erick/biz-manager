@@ -3,15 +3,19 @@
   <component name="DesignSurface">
     <option name="filePathToZoomLevelMap">
       <map>
+        <entry key="..\:/Users/rickiey/AndroidStudioProjects/BizManager/app/src/main/res/layout/custom_commodities_row.xml" value="0.27291666666666664" />
         <entry key="..\:/Users/rickiey/AndroidStudioProjects/BizManager/app/src/main/res/layout/custom_input_row.xml" value="0.15307971014492755" />
         <entry key="..\:/Users/rickiey/AndroidStudioProjects/BizManager/app/src/main/res/layout/custom_row.xml" value="0.13272543059777103" />
         <entry key="..\:/Users/rickiey/AndroidStudioProjects/BizManager/app/src/main/res/layout/custom_sales_row.xml" value="0.15307971014492755" />
         <entry key="..\:/Users/rickiey/AndroidStudioProjects/BizManager/app/src/main/res/layout/fragment_record_input.xml" value="0.15" />
         <entry key="..\:/Users/rickiey/AndroidStudioProjects/BizManager/app/src/main/res/layout/fragment_record_sales.xml" value="0.18" />
         <entry key="..\:/Users/rickiey/AndroidStudioProjects/BizManager/app/src/main/res/layout/fragment_view_account.xml" value="0.15307971014492755" />
+        <entry key="..\:/Users/rickiey/AndroidStudioProjects/BizManager/app/src/main/res/layout/fragment_view_commodities.xml" value="0.27291666666666664" />
         <entry key="..\:/Users/rickiey/AndroidStudioProjects/BizManager/app/src/main/res/layout/fragment_view_input.xml" value="0.15307971014492755" />
         <entry key="..\:/Users/rickiey/AndroidStudioProjects/BizManager/app/src/main/res/layout/fragment_view_sales.xml" value="0.13272543059777103" />
         <entry key="..\:/Users/rickiey/AndroidStudioProjects/BizManager/app/src/main/res/layout/generic_loading_dialog_layout.xml" value="0.18795289855072464" />
+        <entry key="..\:/Users/rickiey/AndroidStudioProjects/BizManager/app/src/main/res/layout/record_commodity_layout.xml" value="0.17074275362318841" />
+        <entry key="..\:/Users/rickiey/AndroidStudioProjects/BizManager/app/src/main/res/layout/sms_filter.xml" value="0.12604166666666666" />
         <entry key="..\:/Users/rickiey/AndroidStudioProjects/BizManager/app/src/main/res/menu/activity_main_drawer.xml" value="0.26871794871794874" />
         <entry key="..\:/Users/rickiey/AndroidStudioProjects/BizManager/app/src/main/res/menu/main.xml" value="0.27291666666666664" />
       </map>

@@ -1,5 +1,6 @@
 package com.example.bizmanager.ui;
 
+import android.app.Dialog;
 import android.app.ProgressDialog;
 import android.content.Context;
 import android.content.Intent;
@@ -16,7 +17,7 @@ import android.view.ViewGroup;
 import android.widget.AdapterView;
 import android.widget.ArrayAdapter;
 import android.widget.Button;
-import android.widget.ListAdapter;
+import android.widget.EditText;
 import android.widget.RadioButton;
 import android.widget.Spinner;
 import android.widget.SpinnerAdapter;
@@ -50,11 +51,15 @@ import java.util.Map;
 import java.util.Objects;
 
 public class RecordSalesFragment extends Fragment {
+    private final String[] commoditiesPlaceHolder = {"Comm1", "Comm2"};
     private TextView particularsEdit, quantityEdit, unitPriceEdit;
     TextView smsView;
+    EditText smsEdit;
+    Button smsParseBtn;
     Spinner commoditySpinner;
     private RadioButton cashRadio, mpesaRadio;
     FloatingActionButton addSaleBtn;
+    String sms;
     String commodity, particulars, quantity, unitPrice, paymentMethod;
     String transactionCost, phone, firstName, lastName, code, amount;
     String record_sale_url = "http://biz-manager.agria.co.ke/recordSale.php";
@@ -106,8 +111,12 @@ public class RecordSalesFragment extends Fragment {
         alertDialogBuilder = new AlertDialog.Builder(this.requireContext());
         progressDialog = new ProgressDialog(getContext());
 
-        retrieveCommodities();
-
+        boolean isConnected = InternetConnection.checkConnection(getContext());
+        if (isConnected) {
+            retrieveCommodities(getContext());
+        } else {
+            Log.i(TAG, "onCreateView: internet is not connected");
+        }
         saveRecordBtn.setOnClickListener(v -> {
             if (InternetConnection.checkConnection(requireContext())) {
                 getFromEditTexts(particularsEdit, quantityEdit, unitPriceEdit);
@@ -124,10 +133,19 @@ public class RecordSalesFragment extends Fragment {
     }
 
     private void AddSale() {
-
+        Dialog dialog = new Dialog(getContext());
+        dialog.setContentView(R.layout.sms_filter);
+        smsEdit = dialog.findViewById(R.id.sms_text);
+        smsParseBtn = dialog.findViewById(R.id.parse_sms_btn);
+        smsParseBtn.setOnClickListener(v -> {
+            sms = smsEdit.getText().toString();
+            extractMessage(sms);
+            dialog.dismiss();
+        });
+        dialog.show();
     }
 
-    private void retrieveCommodities() {
+    private void retrieveCommodities(Context context) {
         StringRequest stringRequest = new StringRequest(Request.Method.POST, retrieve_commodity_details_url, response -> {
             try {
                 JSONArray jsonArray = new JSONArray(response);
@@ -139,9 +157,15 @@ public class RecordSalesFragment extends Fragment {
                     String unitPrice = object.getString("Unit Price");
                     commodities = new Commodities(id, name, production_cost, unitPrice);
                     commoditiesList.add(commodities);
-                    names.add(commodities.getName());
-                    ListAdapter listAdapter = new ArrayAdapter<>(getContext(), android.R.layout.simple_spinner_dropdown_item, names);
-                    commoditySpinner.setAdapter((SpinnerAdapter) listAdapter);
+                    if (commoditiesList.size() > 0) {
+                        names.add(commodities.getName());
+                        Log.i(TAG, "retrieveCommodities: size: " + names.size());
+                        SpinnerAdapter listAdapter = new ArrayAdapter<>(context, android.R.layout.simple_spinner_dropdown_item, names);
+                        commoditySpinner.setAdapter(listAdapter);
+                    } else {
+                        SpinnerAdapter listAdapter = new ArrayAdapter<>(context, android.R.layout.simple_spinner_dropdown_item, commoditiesPlaceHolder);
+                        commoditySpinner.setAdapter(listAdapter);
+                    }
                 }
             } catch (JSONException e) {
                 e.printStackTrace();
@@ -170,9 +194,9 @@ public class RecordSalesFragment extends Fragment {
         });
     }
 
-    private void getFromEditTexts(TextView particularsEdit, TextView amountEdit, TextView unitPriceEdit) {
+    private void getFromEditTexts(TextView particularsEdit, TextView quantityEdit, TextView unitPriceEdit) {
         particulars = particularsEdit.getText().toString();
-        quantity = amountEdit.getText().toString();
+        quantity = quantityEdit.getText().toString();
         unitPrice = unitPriceEdit.getText().toString();
         commodity = commoditySpinner.getSelectedItem().toString();
 
@@ -187,7 +211,7 @@ public class RecordSalesFragment extends Fragment {
             return;
         }
         if (TextUtils.isEmpty(quantity)) {
-            amountEdit.setError("Enter Quantity");
+            quantityEdit.setError("Enter quantity");
             return;
         }
 
@@ -217,7 +241,6 @@ public class RecordSalesFragment extends Fragment {
                     dialog.dismiss();
                     particularsEdit.setText("");
                     quantityEdit.setText("");
-                    unitPriceEdit.setText("");
                 });
                 AlertDialog alertDialog = alertDialogBuilder.create();
                 alertDialog.show();
@@ -304,6 +327,11 @@ public class RecordSalesFragment extends Fragment {
 
         String formattedResponse = "Type: " + type + "\nCode: " + code + "\nAmount: " + amount + "\nBalance: " + balance + "\nTransaction Cost: " + transactionCost + "\nPhone: " + phone + "\nFirst Name: " + firstName + "\nLast Name: " + lastName + "\nDate: " + date + "\nTime: " + time;
         smsView.setText(formattedResponse);
+        if (!smsView.getText().toString().isEmpty()) {
+            int number = (int) (Float.parseFloat(amount) / Float.parseFloat(unitPriceEdit.getText().toString()));
+            Log.i(TAG, "extractMessage: number: " + number);
+            quantityEdit.setText(String.format("%s", number));
+        }
     }
 
     @Override

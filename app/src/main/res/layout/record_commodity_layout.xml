@@ -1,0 +1,54 @@
+<?xml version="1.0" encoding="utf-8"?>
+<LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    android:orientation="vertical"
+    android:layout_width="match_parent"
+    android:gravity="center_horizontal"
+    android:layout_height="match_parent">
+
+    <EditText
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:id="@+id/commodityEdit"
+        android:hint="@string/enter_commodity_name"
+        android:inputType="textCapWords"
+        android:layout_margin="@dimen/margin"/>
+
+    <EditText
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:id="@+id/production_cost_edit"
+        android:hint="@string/production_cost"
+        android:inputType="number"
+        android:layout_margin="@dimen/margin"/>
+
+    <EditText
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:id="@+id/unit_price_edit"
+        android:hint="@string/unit_price"
+        android:inputType="number"
+        android:layout_margin="@dimen/margin"/>
+
+    <LinearLayout
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:orientation="horizontal"
+        android:weightSum="2">
+        <Button
+            android:layout_width="0dp"
+            android:layout_height="wrap_content"
+            android:layout_weight="1"
+            android:text="@string/cancel"
+            android:layout_margin="@dimen/margin"
+            android:id="@+id/cancel_button"/>
+
+        <Button
+            android:layout_width="0dp"
+            android:layout_height="wrap_content"
+            android:layout_weight="1"
+            android:text="@string/record"
+            android:layout_margin="@dimen/margin"
+            android:id="@+id/save_button"/>
+    </LinearLayout>
+
+</LinearLayout>
